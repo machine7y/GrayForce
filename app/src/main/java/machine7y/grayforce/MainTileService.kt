@@ -10,21 +10,28 @@ class MainTileService : TileService() {
         MainManagerImpl(applicationContext)
     }
 
+    override fun onTileAdded() {
+        mainManager.disableGrayscale()
+        updateTile()
+    }
+
     override fun onClick() {
-        super.onClick()
-        val tile = qsTile
-        val newTileState = if (mainManager.hasWriteSecureSettingsPermission()) {
-            mainManager.switch()
-            if (mainManager.isGrayscaleEnabled()) {
-                Tile.STATE_ACTIVE
-            } else {
-                Tile.STATE_INACTIVE
-            }
+        if (!mainManager.hasWriteSecureSettingsPermission()) {
+            updateTile()
+            return
+        }
+
+        mainManager.switch()
+        updateTile()
+    }
+
+    private fun updateTile() {
+        qsTile.state = if (mainManager.hasWriteSecureSettingsPermission() && mainManager.isGrayscaleEnabled()) {
+            Tile.STATE_ACTIVE
         } else {
             Tile.STATE_INACTIVE
         }
 
-        tile.state = newTileState
-        tile.updateTile()
+        qsTile.updateTile()
     }
 }

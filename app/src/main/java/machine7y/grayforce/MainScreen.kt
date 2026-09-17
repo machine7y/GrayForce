@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
@@ -53,7 +54,7 @@ fun MainScreen(mainManager: MainManager) {
                     }
                 ) {
                     Text(
-                        text = "Switch",
+                        text = stringResource(R.string.switch_),
                         fontSize = 18.sp,
                     )
                 }
@@ -63,10 +64,15 @@ fun MainScreen(mainManager: MainManager) {
                 AlertDialog(
                     onDismissRequest = { },
                     title = {
-                        Text("Needed permission")
+                        Text(stringResource(R.string.needed_permission))
                     },
                     text = {
-                        Text("Use command on PC: \n\"adb shell pm grant $packageName android.permission.WRITE_SECURE_SETTINGS\"")
+                        Text(
+                            text = stringResource(
+                                R.string.use_command_on_pc_adb_shell_pm_grant_android_permission_write_secure_settings,
+                                packageName
+                            )
+                        )
                     },
                     confirmButton = {},
                     dismissButton = {},

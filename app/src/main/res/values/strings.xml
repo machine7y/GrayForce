@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">GrayForce</string>
+
+    <string name="switch_">Switch</string>
+    <string name="needed_permission">Needed permission</string>
+    <string name="use_command_on_pc_adb_shell_pm_grant_android_permission_write_secure_settings">Use command on PC: \n\"adb shell pm grant %1$s android.permission.WRITE_SECURE_SETTINGS\"</string>
 </resources>
