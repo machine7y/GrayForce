@@ -74,8 +74,8 @@ fun MainScreen(mainManager: MainManager) {
                             )
                         )
                     },
-                    confirmButton = {},
-                    dismissButton = {},
+                    confirmButton = { },
+                    dismissButton = { },
                 )
             }
         }

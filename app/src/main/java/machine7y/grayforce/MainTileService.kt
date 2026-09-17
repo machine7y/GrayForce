@@ -2,13 +2,15 @@ package machine7y.grayforce
 
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import machine7y.grayforce.manager.MainManagerImpl
+import dagger.hilt.android.AndroidEntryPoint
+import machine7y.grayforce.manager.MainManager
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainTileService : TileService() {
 
-    private val mainManager by lazy {
-        MainManagerImpl(applicationContext)
-    }
+    @Inject
+    lateinit var mainManager: MainManager
 
     override fun onTileAdded() {
         mainManager.disableGrayscale()

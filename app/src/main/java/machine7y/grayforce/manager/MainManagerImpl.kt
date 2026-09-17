@@ -4,9 +4,13 @@ import android.Manifest
 import android.content.Context
 import android.provider.Settings
 import androidx.core.content.PermissionChecker
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MainManagerImpl(
-    private val context: Context,
+@Singleton
+class MainManagerImpl @Inject constructor(
+    @param:ApplicationContext private val context: Context,
 ): MainManager {
 
     private val contentResolver
