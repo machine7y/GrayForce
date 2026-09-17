@@ -4,13 +4,13 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import machine7y.grayforce.manager.MainManager
-import machine7y.grayforce.manager.MainManagerImpl
+import machine7y.grayforce.data.SettingsRepository
+import machine7y.grayforce.data.SettingsRepositoryImpl
 
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class Module {
 
     @Binds
-    abstract fun bindMainManager(mainManagerImpl: MainManagerImpl): MainManager
+    abstract fun bindSettingsRepository(settingsRepositoryImpl: SettingsRepositoryImpl): SettingsRepository
 }

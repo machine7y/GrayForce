@@ -1,4 +1,4 @@
-package machine7y.grayforce.manager
+package machine7y.grayforce.data
 
 import android.Manifest
 import android.content.Context
@@ -9,9 +9,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MainManagerImpl @Inject constructor(
+class SettingsRepositoryImpl @Inject constructor(
     @param:ApplicationContext private val context: Context,
-): MainManager {
+): SettingsRepository {
 
     private val contentResolver
         get() = context.contentResolver

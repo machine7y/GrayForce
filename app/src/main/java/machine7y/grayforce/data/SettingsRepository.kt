@@ -1,6 +1,6 @@
-package machine7y.grayforce.manager
+package machine7y.grayforce.data
 
-interface MainManager {
+interface SettingsRepository {
 
     fun hasWriteSecureSettingsPermission(): Boolean
 
