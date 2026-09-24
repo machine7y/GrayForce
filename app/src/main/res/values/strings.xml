@@ -8,4 +8,8 @@
     <string name="installation_instructions_clickable1">https://github.com/machine7y/GrayForce</string>
     <string name="installation_instructions_clickable2">https://developer.android.com/tools/releases/platform-tools</string>
     <string name="installation_instructions_clickable3">adb shell pm grant machine7y.grayforce android.permission.WRITE_SECURE_SETTINGS</string>
+    <string name="setup_countdown_timer">Set a timer to automatically switch to grayscale mode</string>
+    <string name="duration_seconds">%1$ds</string>
+    <string name="duration_minutes">%1$dm</string>
+    <string name="duration_hours">%1$dh</string>
 </resources>

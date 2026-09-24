@@ -5,6 +5,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import machine7y.grayforce.R
 
+val colorWhite = Color.White
+val colorLightGray = Color.LightGray
 val colorSilkyTurquoise: Color
     @Composable
     get() = colorResource(R.color.silky_turquoise)
