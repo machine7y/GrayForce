@@ -27,7 +27,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import machine7y.grayforce.R
+import machine7y.grayforce.data.DeviceSettingsRepository
 import machine7y.grayforce.data.SettingsRepository
 import machine7y.grayforce.presentation.components.ClickableText
 import machine7y.grayforce.presentation.components.Settings
@@ -36,14 +39,14 @@ import machine7y.grayforce.presentation.modifier.bottomShadow
 import machine7y.grayforce.presentation.utils.copyToClipboard
 
 @Composable
-fun SettingsScreen(settingsRepository: SettingsRepository) {
+fun SettingsScreen(deviceSettingsRepository: DeviceSettingsRepository, settingsRepository: SettingsRepository) {
     val context = LocalContext.current
     val clipboard: Clipboard = LocalClipboard.current
     val githubLink = stringResource(R.string.github_link)
     val copiedMessageFormat = stringResource(R.string.copied_format)
 
     var hasWriteSecureSettingsPermissionGranted by remember {
-        mutableStateOf(settingsRepository.hasWriteSecureSettingsPermission())
+        mutableStateOf(deviceSettingsRepository.hasWriteSecureSettingsPermission())
     }
 
     val onTextClicked: suspend (String) -> Unit = {
@@ -52,7 +55,7 @@ fun SettingsScreen(settingsRepository: SettingsRepository) {
         clipboard.copyToClipboard(it)
     }
     OnResumeEffect {
-        hasWriteSecureSettingsPermissionGranted = settingsRepository.hasWriteSecureSettingsPermission()
+        hasWriteSecureSettingsPermissionGranted = deviceSettingsRepository.hasWriteSecureSettingsPermission()
     }
 
     Scaffold(
@@ -80,6 +83,7 @@ fun SettingsScreen(settingsRepository: SettingsRepository) {
             }
             if (hasWriteSecureSettingsPermissionGranted) {
                 Settings(
+                    deviceSettingsRepository = deviceSettingsRepository,
                     settingsRepository = settingsRepository,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -116,10 +120,23 @@ fun SettingsScreen(settingsRepository: SettingsRepository) {
 @Preview(showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
-    SettingsScreen(mockManager())
+    SettingsScreen(mockDeviceSettingsRepository(), mockSettingsRepository())
 }
 
-fun mockManager() = object : SettingsRepository {
+fun mockSettingsRepository() = object : SettingsRepository {
+
+    override suspend fun setDelay(newDelay: Float) {
+    }
+
+    override fun delayFlow(): Flow<Float> = flowOf()
+
+    override suspend fun setGrayForceEnable(isEnable: Boolean) {
+    }
+
+    override fun grayForceEnabledFlow(): Flow<Boolean> = flowOf()
+}
+
+fun mockDeviceSettingsRepository() = object : DeviceSettingsRepository {
 
     override fun hasWriteSecureSettingsPermission() = true
 

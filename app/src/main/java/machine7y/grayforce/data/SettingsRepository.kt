@@ -1,14 +1,14 @@
 package machine7y.grayforce.data
 
+import kotlinx.coroutines.flow.Flow
+
 interface SettingsRepository {
 
-    fun hasWriteSecureSettingsPermission(): Boolean
+    suspend fun setDelay(newDelay: Float)
 
-    fun enableGrayscale()
+    fun delayFlow(): Flow<Float>
 
-    fun disableGrayscale()
+    suspend fun setGrayForceEnable(isEnable: Boolean)
 
-    fun isGrayscaleEnabled(): Boolean
-
-    fun switch()
+    fun grayForceEnabledFlow(): Flow<Boolean>
 }

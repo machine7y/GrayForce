@@ -15,10 +15,11 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,33 +30,47 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
+import machine7y.grayforce.DEFAULT_DELAY
+import machine7y.grayforce.DEFAULT_GRAY_FORCE_ENABLE
 import machine7y.grayforce.MainTileService
 import machine7y.grayforce.R
+import machine7y.grayforce.data.DeviceSettingsRepository
 import machine7y.grayforce.data.SettingsRepository
+import machine7y.grayforce.delayRange
 import machine7y.grayforce.presentation.colorChineseCyan
 import machine7y.grayforce.presentation.colorLightGray
 import machine7y.grayforce.presentation.colorSilkyTurquoise
 import machine7y.grayforce.presentation.colorWhite
-import machine7y.grayforce.presentation.mockManager
+import machine7y.grayforce.presentation.mockDeviceSettingsRepository
+import machine7y.grayforce.presentation.mockSettingsRepository
 import machine7y.grayforce.presentation.utils.scaleValue
 import machine7y.grayforce.presentation.utils.toDurationString
 
-private const val DEFAULT_VALUE = 60f
-
-private val sliderRange = 1f..595f
-
 @Composable
 fun Settings(
+    deviceSettingsRepository: DeviceSettingsRepository,
     settingsRepository: SettingsRepository,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
 
+    val grayForceState = settingsRepository
+        .grayForceEnabledFlow()
+        .collectAsStateWithLifecycle(initialValue = DEFAULT_GRAY_FORCE_ENABLE)
+    val delayState by settingsRepository
+        .delayFlow()
+        .collectAsStateWithLifecycle(initialValue = DEFAULT_DELAY)
+    var sliderValueState by remember { mutableFloatStateOf(delayState) }
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(delayState) {
+        sliderValueState = delayState
+    }
     Column(
         modifier = modifier,
     ) {
-        var sliderValueState by remember { mutableFloatStateOf(DEFAULT_VALUE) }
-        var switcherState by remember { mutableStateOf(false) }
 
         Text(
             text = stringResource(R.string.setup_countdown_timer),
@@ -68,7 +83,7 @@ fun Settings(
                 .height(30.dp),
         )
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -79,9 +94,14 @@ fun Settings(
             Slider(
                 value = sliderValueState,
                 onValueChange = { sliderValueState = it },
-                valueRange = sliderRange,
-                steps = sliderRange.endInclusive.toInt(),
-                enabled = !switcherState,
+                onValueChangeFinished = {
+                    coroutineScope.launch {
+                        settingsRepository.setDelay(sliderValueState)
+                    }
+                },
+                valueRange = delayRange,
+                steps = delayRange.endInclusive.toInt(),
+                enabled = !grayForceState.value,
                 colors = SliderDefaults.colors(
                     thumbColor = colorSilkyTurquoise,
                     activeTrackColor = colorWhite,
@@ -100,8 +120,12 @@ fun Settings(
                     .height(20.dp),
             )
             Switch(
-                checked = switcherState,
-                onCheckedChange = { switcherState = it },
+                checked = grayForceState.value,
+                onCheckedChange = { checked ->
+                    coroutineScope.launch {
+                        settingsRepository.setGrayForceEnable(checked)
+                    }
+                },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = colorWhite,
                     checkedTrackColor = colorSilkyTurquoise,
@@ -115,7 +139,7 @@ fun Settings(
 
         IconButton(
             onClick = {
-                settingsRepository.switch()
+                deviceSettingsRepository.switch()
                 TileService.requestListeningState(context, ComponentName(context, MainTileService::class.java))
             },
             modifier = Modifier
@@ -137,5 +161,5 @@ fun Settings(
 @Preview(showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
-    Settings(mockManager())
+    Settings(mockDeviceSettingsRepository(), mockSettingsRepository())
 }

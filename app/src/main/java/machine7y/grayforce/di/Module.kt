@@ -4,6 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import machine7y.grayforce.data.DeviceSettingsRepository
+import machine7y.grayforce.data.DeviceSettingsRepositoryImpl
 import machine7y.grayforce.data.SettingsRepository
 import machine7y.grayforce.data.SettingsRepositoryImpl
 
@@ -12,5 +14,12 @@ import machine7y.grayforce.data.SettingsRepositoryImpl
 abstract class Module {
 
     @Binds
-    abstract fun bindSettingsRepository(settingsRepositoryImpl: SettingsRepositoryImpl): SettingsRepository
+    abstract fun bindDeviceSecureSettingsRepository(
+        deviceSettingsRepositoryImpl: DeviceSettingsRepositoryImpl
+    ): DeviceSettingsRepository
+
+    @Binds
+    abstract fun bindSettingsRepository(
+        settingsRepositoryImpl: SettingsRepositoryImpl
+    ): SettingsRepository
 }

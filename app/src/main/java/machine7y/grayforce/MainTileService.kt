@@ -3,17 +3,17 @@ package machine7y.grayforce
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import dagger.hilt.android.AndroidEntryPoint
-import machine7y.grayforce.data.SettingsRepository
+import machine7y.grayforce.data.DeviceSettingsRepository
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainTileService : TileService() {
 
     @Inject
-    lateinit var settingsRepository: SettingsRepository
+    lateinit var deviceSettingsRepository: DeviceSettingsRepository
 
     override fun onTileAdded() {
-        settingsRepository.disableGrayscale()
+        deviceSettingsRepository.disableGrayscale()
         updateTile()
     }
 
@@ -23,17 +23,17 @@ class MainTileService : TileService() {
     }
 
     override fun onClick() {
-        if (!settingsRepository.hasWriteSecureSettingsPermission()) {
+        if (!deviceSettingsRepository.hasWriteSecureSettingsPermission()) {
             updateTile()
             return
         }
 
-        settingsRepository.switch()
+        deviceSettingsRepository.switch()
         updateTile()
     }
 
     private fun updateTile() {
-        qsTile.state = if (settingsRepository.hasWriteSecureSettingsPermission() && settingsRepository.isGrayscaleEnabled()) {
+        qsTile.state = if (deviceSettingsRepository.hasWriteSecureSettingsPermission() && deviceSettingsRepository.isGrayscaleEnabled()) {
             Tile.STATE_ACTIVE
         } else {
             Tile.STATE_INACTIVE

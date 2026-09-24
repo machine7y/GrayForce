@@ -1,57 +1,53 @@
 package machine7y.grayforce.data
 
-import android.Manifest
 import android.content.Context
-import android.provider.Settings
-import androidx.core.content.PermissionChecker
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import machine7y.grayforce.DEFAULT_DELAY
+import machine7y.grayforce.DEFAULT_GRAY_FORCE_ENABLE
 import javax.inject.Inject
 import javax.inject.Singleton
+
+private const val STORE_NAME = "settings"
+
+private val delayKey = floatPreferencesKey("delay_key")
+
+private val grayForceEnabledKey = booleanPreferencesKey("gray_force_enabled_key")
 
 @Singleton
 class SettingsRepositoryImpl @Inject constructor(
     @param:ApplicationContext private val context: Context,
-): SettingsRepository {
+) : SettingsRepository {
 
-    private val contentResolver
-        get() = context.contentResolver
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = STORE_NAME)
 
-    override fun hasWriteSecureSettingsPermission(): Boolean = PermissionChecker.checkSelfPermission(
-        /* context = */ context,
-        /* permission = */ Manifest.permission.WRITE_SECURE_SETTINGS,
-    ) == PermissionChecker.PERMISSION_GRANTED
-
-    override fun enableGrayscale() {
-        val resolver = contentResolver
-
-        Settings.Secure.putInt(resolver, DALTONIZER, MONOCHROMACY)
-        Settings.Secure.putInt(resolver, DALTONIZER_ENABLED, 1)
-    }
-
-    override fun disableGrayscale() {
-        Settings.Secure.putInt(contentResolver, DALTONIZER_ENABLED, 0)
-    }
-
-    override fun isGrayscaleEnabled(): Boolean {
-        val isEnabled = Settings.Secure.getInt(contentResolver, DALTONIZER_ENABLED, 0) != 0
-        val mode = Settings.Secure.getInt(contentResolver, DALTONIZER, -1)
-
-        return isEnabled && mode == MONOCHROMACY
-    }
-
-    override fun switch() {
-        if (isGrayscaleEnabled()) {
-            disableGrayscale()
-        } else {
-            enableGrayscale()
+    override suspend fun setDelay(newDelay: Float) {
+        context.dataStore.updateData {
+            it.toMutablePreferences().also { preferences ->
+                preferences[delayKey] = newDelay
+            }
         }
     }
 
-    companion object {
+    override fun delayFlow(): Flow<Float> = context.dataStore.data.map { preferences ->
+        preferences[delayKey] ?: DEFAULT_DELAY
+    }
 
-        private const val DALTONIZER_ENABLED = "accessibility_display_daltonizer_enabled"
-        private const val DALTONIZER = "accessibility_display_daltonizer"
+    override suspend fun setGrayForceEnable(isEnable: Boolean) {
+        context.dataStore.updateData {
+            it.toMutablePreferences().also { preferences ->
+                preferences[grayForceEnabledKey] = isEnable
+            }
+        }
+    }
 
-        private const val MONOCHROMACY = 0
+    override fun grayForceEnabledFlow(): Flow<Boolean> = context.dataStore.data.map { preferences ->
+        preferences[grayForceEnabledKey] ?: DEFAULT_GRAY_FORCE_ENABLE
     }
 }
