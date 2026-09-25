@@ -2,6 +2,7 @@ package machine7y.grayforce.presentation.components
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -68,6 +69,7 @@ fun ClickableText(
         text = annotatedText,
         fontSize = 16.sp,
         textAlign = textAlign,
+        color = MaterialTheme.colorScheme.primary,
         onTextLayout = { textLayoutResult = it },
         modifier = modifier
             .pointerInput(Unit) {

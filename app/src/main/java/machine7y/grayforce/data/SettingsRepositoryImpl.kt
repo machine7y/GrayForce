@@ -17,7 +17,6 @@ import javax.inject.Singleton
 private const val STORE_NAME = "settings"
 
 private val delayKey = intPreferencesKey("delay_key")
-
 private val grayForceEnabledKey = booleanPreferencesKey("gray_force_enabled_key")
 
 @Singleton

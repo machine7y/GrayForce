@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.Dp
 
 fun Modifier.bottomShadow(
     height: Dp,
-    color: Color = Color.Black.copy(alpha = 0.1f)
+    color: Color,
 ) = this.drawBehind {
     val h = height.toPx()
     drawRect(

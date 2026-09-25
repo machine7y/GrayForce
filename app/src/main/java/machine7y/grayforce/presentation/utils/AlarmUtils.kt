@@ -43,10 +43,8 @@ private suspend fun beforeSwitchLaunchAlarmIfNeeded(
     settingsRepository: SettingsRepository,
     deviceSettingsRepository: DeviceSettingsRepository,
 ) {
-    val isGrayForceEnable = settingsRepository.grayForceEnabledFlow().first()
-
     if (!deviceSettingsRepository.isGrayscaleEnabled()) return
-    if (!isGrayForceEnable) return
+    if (!settingsRepository.grayForceEnabledFlow().first()) return
 
     val alarmManager = context.getSystemService(AlarmManager::class.java)
     val delayInSecond = settingsRepository.delayFlow().first() * 1000

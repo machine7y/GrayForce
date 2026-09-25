@@ -16,7 +16,6 @@ class MainTileService : TileService() {
 
     @Inject
     lateinit var deviceSettingsRepository: DeviceSettingsRepository
-
     @Inject
     lateinit var settingsRepository: SettingsRepository
 

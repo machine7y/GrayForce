@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
 import machine7y.grayforce.data.DeviceSettingsRepository
 import machine7y.grayforce.data.SettingsRepository
+import machine7y.grayforce.presentation.theme.Theme
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -21,7 +22,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            SettingsScreen(deviceSettingsRepository, settingsRepository)
+            Theme {
+                SettingsScreen(deviceSettingsRepository, settingsRepository)
+            }
         }
     }
 }
