@@ -63,6 +63,7 @@ import machine7y.grayforce.presentation.modifier.bottomShadow
 import machine7y.grayforce.presentation.theme.Theme
 import machine7y.grayforce.presentation.theme.appColorScheme
 import machine7y.grayforce.presentation.utils.copyToClipboard
+import machine7y.grayforce.presentation.utils.launchAlarmIfNeeded
 import machine7y.grayforce.presentation.utils.scaleValue
 import machine7y.grayforce.presentation.utils.switchGrayscale
 import machine7y.grayforce.presentation.utils.toDurationString
@@ -291,7 +292,11 @@ private fun Settings(
                 onCheckedChange = { checked ->
                     coroutineScope.launch {
                         settingsRepository.setGrayForceEnable(checked)
-                        // TODO: Handle launch alarm
+                        launchAlarmIfNeeded(
+                            context = context,
+                            settingsRepository = settingsRepository,
+                            deviceSettingsRepository = deviceSettingsRepository,
+                        )
                     }
                 },
                 colors = SwitchDefaults.colors(

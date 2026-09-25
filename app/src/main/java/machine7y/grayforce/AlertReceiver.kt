@@ -26,7 +26,7 @@ class AlertReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         coroutineScope.launch {
-            if (!deviceSettingsRepository.isGrayscaleEnabled()) return@launch
+            if (deviceSettingsRepository.isGrayscaleEnabled()) return@launch
             if (!settingsRepository.grayForceEnabledFlow().first()) return@launch
 
                 switchGrayscale(

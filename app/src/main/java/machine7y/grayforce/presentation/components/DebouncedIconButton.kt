@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-private const val DEBOUNCE = 500L
+private const val DEBOUNCE = 300L
 
 @Composable
 fun DebouncedIconButton(

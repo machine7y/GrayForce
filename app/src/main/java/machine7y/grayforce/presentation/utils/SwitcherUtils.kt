@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.service.quicksettings.TileService
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -16,9 +15,9 @@ import machine7y.grayforce.MainTileService
 import machine7y.grayforce.data.DeviceSettingsRepository
 import machine7y.grayforce.data.SettingsRepository
 
+private const val MILLIS_IN_ONE_SECOND = 1000
 private const val ALERT_REQUEST_CODE = 1
 
-// TODO: Refactor
 fun switchGrayscale(
     context: Context,
     coroutineScope: CoroutineScope,
@@ -38,6 +37,18 @@ fun switchGrayscale(
     }
 }
 
+suspend fun launchAlarmIfNeeded(
+    context: Context,
+    settingsRepository: SettingsRepository,
+    deviceSettingsRepository: DeviceSettingsRepository,
+) {
+    if (deviceSettingsRepository.isGrayscaleEnabled()) return
+    if (!settingsRepository.grayForceEnabledFlow().first()) return
+
+    val delayInSecond = getDelayInSecond(settingsRepository)
+    setupAlarm(context, delayInSecond)
+}
+
 private suspend fun beforeSwitchLaunchAlarmIfNeeded(
     context: Context,
     settingsRepository: SettingsRepository,
@@ -46,8 +57,15 @@ private suspend fun beforeSwitchLaunchAlarmIfNeeded(
     if (!deviceSettingsRepository.isGrayscaleEnabled()) return
     if (!settingsRepository.grayForceEnabledFlow().first()) return
 
+    val delayInSecond = getDelayInSecond(settingsRepository)
+    setupAlarm(context, delayInSecond)
+}
+
+suspend fun getDelayInSecond(settingsRepository: SettingsRepository): Int =
+    settingsRepository.delayFlow().first() * MILLIS_IN_ONE_SECOND
+
+private fun setupAlarm(context: Context, delayInSecond: Int) {
     val alarmManager = context.getSystemService(AlarmManager::class.java)
-    val delayInSecond = settingsRepository.delayFlow().first() * 1000
     val intent = Intent(context, AlertReceiver::class.java)
     val pendingIntent = PendingIntent.getBroadcast(
         /* context = */ context,
