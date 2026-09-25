@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +16,7 @@ import javax.inject.Singleton
 
 private const val STORE_NAME = "settings"
 
-private val delayKey = floatPreferencesKey("delay_key")
+private val delayKey = intPreferencesKey("delay_key")
 
 private val grayForceEnabledKey = booleanPreferencesKey("gray_force_enabled_key")
 
@@ -27,7 +27,7 @@ class SettingsRepositoryImpl @Inject constructor(
 
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = STORE_NAME)
 
-    override suspend fun setDelay(newDelay: Float) {
+    override suspend fun setDelay(newDelay: Int) {
         context.dataStore.updateData {
             it.toMutablePreferences().also { preferences ->
                 preferences[delayKey] = newDelay
@@ -35,7 +35,7 @@ class SettingsRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun delayFlow(): Flow<Float> = context.dataStore.data.map { preferences ->
+    override fun delayFlow(): Flow<Int> = context.dataStore.data.map { preferences ->
         preferences[delayKey] ?: DEFAULT_DELAY
     }
 

@@ -49,7 +49,7 @@ private suspend fun beforeSwitchLaunchAlarmIfNeeded(
     if (!isGrayForceEnable) return
 
     val alarmManager = context.getSystemService(AlarmManager::class.java)
-    val delayInSecond = settingsRepository.delayFlow().first().toInt() * 1000
+    val delayInSecond = settingsRepository.delayFlow().first() * 1000
     val intent = Intent(context, AlertReceiver::class.java)
     val pendingIntent = PendingIntent.getBroadcast(
         /* context = */ context,

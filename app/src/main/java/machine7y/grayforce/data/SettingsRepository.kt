@@ -4,9 +4,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface SettingsRepository {
 
-    suspend fun setDelay(newDelay: Float)
+    suspend fun setDelay(newDelay: Int)
 
-    fun delayFlow(): Flow<Float>
+    fun delayFlow(): Flow<Int>
 
     suspend fun setGrayForceEnable(isEnable: Boolean)
 

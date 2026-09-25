@@ -45,6 +45,7 @@ import machine7y.grayforce.presentation.mockSettingsRepository
 import machine7y.grayforce.presentation.utils.scaleValue
 import machine7y.grayforce.presentation.utils.switchGrayscale
 import machine7y.grayforce.presentation.utils.toDurationString
+import machine7y.grayforce.presentation.utils.unscaleValue
 
 @Composable
 fun Settings(
@@ -60,11 +61,11 @@ fun Settings(
     val delayState by settingsRepository
         .delayFlow()
         .collectAsStateWithLifecycle(initialValue = DEFAULT_DELAY)
-    var sliderValueState by remember { mutableFloatStateOf(delayState) }
+    var sliderValueState by remember { mutableFloatStateOf(delayState.unscaleValue().toFloat()) }
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(delayState) {
-        sliderValueState = delayState
+        sliderValueState = delayState.unscaleValue().toFloat()
     }
     Column(
         modifier = modifier,
@@ -94,7 +95,7 @@ fun Settings(
                 onValueChange = { sliderValueState = it },
                 onValueChangeFinished = {
                     coroutineScope.launch {
-                        settingsRepository.setDelay(sliderValueState)
+                        settingsRepository.setDelay(sliderValueState.toInt().scaleValue())
                     }
                 },
                 valueRange = delayRange,

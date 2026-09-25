@@ -5,16 +5,19 @@ import machine7y.grayforce.R
 
 private const val SECOND_IN_HOUR = 3600
 private const val SECOND_IN_MINUTE = 60
+private const val MIDDLE = 300
 
-fun Int.scaleValue(): Int {
-    val middle = 300
-    return if (this > middle) {
-        middle + (this - middle) * 60f
-    } else {
-        this
-    }
-        .toInt()
-}
+fun Int.scaleValue(): Int = if (this > MIDDLE) {
+    MIDDLE + (this - MIDDLE) * 60f
+} else {
+    this
+}.toInt()
+
+fun Int.unscaleValue(): Int = if (this > MIDDLE) {
+    MIDDLE + (this - MIDDLE) / 60f
+} else {
+    this
+}.toInt()
 
 fun Int.toDurationString(context: Context): String {
     val hours = this / SECOND_IN_HOUR

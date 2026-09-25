@@ -125,10 +125,10 @@ fun SettingsScreenPreview() {
 
 fun mockSettingsRepository() = object : SettingsRepository {
 
-    override suspend fun setDelay(newDelay: Float) {
+    override suspend fun setDelay(newDelay: Int) {
     }
 
-    override fun delayFlow(): Flow<Float> = flowOf()
+    override fun delayFlow(): Flow<Int> = flowOf()
 
     override suspend fun setGrayForceEnable(isEnable: Boolean) {
     }
