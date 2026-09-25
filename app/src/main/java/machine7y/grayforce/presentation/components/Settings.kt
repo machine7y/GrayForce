@@ -1,7 +1,5 @@
 package machine7y.grayforce.presentation.components
 
-import android.content.ComponentName
-import android.service.quicksettings.TileService
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -34,7 +32,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import machine7y.grayforce.DEFAULT_DELAY
 import machine7y.grayforce.DEFAULT_GRAY_FORCE_ENABLE
-import machine7y.grayforce.MainTileService
 import machine7y.grayforce.R
 import machine7y.grayforce.data.DeviceSettingsRepository
 import machine7y.grayforce.data.SettingsRepository
@@ -46,6 +43,7 @@ import machine7y.grayforce.presentation.colorWhite
 import machine7y.grayforce.presentation.mockDeviceSettingsRepository
 import machine7y.grayforce.presentation.mockSettingsRepository
 import machine7y.grayforce.presentation.utils.scaleValue
+import machine7y.grayforce.presentation.utils.switchGrayscale
 import machine7y.grayforce.presentation.utils.toDurationString
 
 @Composable
@@ -124,6 +122,7 @@ fun Settings(
                 onCheckedChange = { checked ->
                     coroutineScope.launch {
                         settingsRepository.setGrayForceEnable(checked)
+                        // TODO: Handle launch alarm
                     }
                 },
                 colors = SwitchDefaults.colors(
@@ -139,8 +138,12 @@ fun Settings(
 
         IconButton(
             onClick = {
-                deviceSettingsRepository.switch()
-                TileService.requestListeningState(context, ComponentName(context, MainTileService::class.java))
+                switchGrayscale(
+                    context = context,
+                    coroutineScope = coroutineScope,
+                    settingsRepository = settingsRepository,
+                    deviceSettingsRepository = deviceSettingsRepository,
+                )
             },
             modifier = Modifier
                 .background(
