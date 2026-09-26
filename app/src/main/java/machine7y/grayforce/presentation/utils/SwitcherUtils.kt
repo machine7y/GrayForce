@@ -23,6 +23,7 @@ fun switchGrayscale(
     coroutineScope: CoroutineScope,
     settingsRepository: SettingsRepository,
     deviceSettingsRepository: DeviceSettingsRepository,
+    shouldUpdateMainTileService: Boolean = true,
 ) {
     coroutineScope.launch {
         beforeSwitchLaunchAlarmIfNeeded(
@@ -31,9 +32,11 @@ fun switchGrayscale(
             deviceSettingsRepository = deviceSettingsRepository,
         )
         deviceSettingsRepository.switch()
-        // TODO: Fix delay
-        delay(100)
-        TileService.requestListeningState(context, ComponentName(context, MainTileService::class.java))
+
+        if (shouldUpdateMainTileService) {
+            delay(100)
+            TileService.requestListeningState(context, ComponentName(context, MainTileService::class.java))
+        }
     }
 }
 
@@ -45,7 +48,7 @@ suspend fun launchAlarmIfNeeded(
     if (deviceSettingsRepository.isGrayscaleEnabled()) return
     if (!settingsRepository.grayForceEnabledFlow().first()) return
 
-    val delayInSecond = getDelayInSecond(settingsRepository)
+    val delayInSecond = getDelayInMillis(settingsRepository)
     setupAlarm(context, delayInSecond)
 }
 
@@ -57,14 +60,14 @@ private suspend fun beforeSwitchLaunchAlarmIfNeeded(
     if (!deviceSettingsRepository.isGrayscaleEnabled()) return
     if (!settingsRepository.grayForceEnabledFlow().first()) return
 
-    val delayInSecond = getDelayInSecond(settingsRepository)
-    setupAlarm(context, delayInSecond)
+    val delayInMillis = getDelayInMillis(settingsRepository)
+    setupAlarm(context, delayInMillis)
 }
 
-suspend fun getDelayInSecond(settingsRepository: SettingsRepository): Int =
+suspend fun getDelayInMillis(settingsRepository: SettingsRepository): Int =
     settingsRepository.delayFlow().first() * MILLIS_IN_ONE_SECOND
 
-private fun setupAlarm(context: Context, delayInSecond: Int) {
+private fun setupAlarm(context: Context, delayInMillis: Int) {
     val alarmManager = context.getSystemService(AlarmManager::class.java)
     val intent = Intent(context, AlertReceiver::class.java)
     val pendingIntent = PendingIntent.getBroadcast(
@@ -73,7 +76,7 @@ private fun setupAlarm(context: Context, delayInSecond: Int) {
         /* intent = */ intent,
         /* flags = */ PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
     )
-    val triggerAt = System.currentTimeMillis() + delayInSecond
+    val triggerAt = System.currentTimeMillis() + delayInMillis
 
     try {
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pendingIntent)

@@ -175,14 +175,12 @@ private fun Settings(
     Column(
         modifier = modifier,
     ) {
-
         Text(
             text = stringResource(R.string.setup_countdown_timer),
             fontSize = 20.sp,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
         )
-
         Spacer(
             modifier = Modifier
                 .height(30.dp),

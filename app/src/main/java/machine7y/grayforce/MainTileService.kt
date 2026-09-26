@@ -41,7 +41,9 @@ class MainTileService : TileService() {
             coroutineScope = coroutineScope,
             settingsRepository = settingsRepository,
             deviceSettingsRepository = deviceSettingsRepository,
+            shouldUpdateMainTileService = false,
         )
+        forceUpdateTile()
     }
 
     private fun updateTile() {
@@ -49,6 +51,15 @@ class MainTileService : TileService() {
         val isGrayscaleEnabled = deviceSettingsRepository.isGrayscaleEnabled()
 
         qsTile.state = if (hasWriteSecureSettingsPermission && isGrayscaleEnabled) {
+            Tile.STATE_ACTIVE
+        } else {
+            Tile.STATE_INACTIVE
+        }
+        qsTile.updateTile()
+    }
+
+    private fun forceUpdateTile() {
+        qsTile.state = if (qsTile.state == Tile.STATE_INACTIVE) {
             Tile.STATE_ACTIVE
         } else {
             Tile.STATE_INACTIVE
