@@ -18,7 +18,7 @@ fun DebouncedIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     var clickable by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()

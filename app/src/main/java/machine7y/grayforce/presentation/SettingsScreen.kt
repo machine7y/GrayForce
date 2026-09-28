@@ -298,7 +298,7 @@ private fun Settings(
                     }
                 },
                 colors = SwitchDefaults.colors(
-                    checkedThumbColor = MaterialTheme.colorScheme.onSurface,
+                    checkedThumbColor = MaterialTheme.colorScheme.surface,
                     checkedTrackColor = MaterialTheme.appColorScheme.primary,
                     uncheckedThumbColor = MaterialTheme.appColorScheme.primary,
                     uncheckedTrackColor = MaterialTheme.colorScheme.surface,
@@ -343,13 +343,11 @@ fun SettingsScreenPreview() {
 
 fun mockSettingsRepository() = object : SettingsRepository {
 
-    override suspend fun setDelay(newDelay: Int) {
-    }
+    override suspend fun setDelay(newDelay: Int) {}
 
     override fun delayFlow(): Flow<Int> = flowOf()
 
-    override suspend fun setGrayForceEnable(isEnable: Boolean) {
-    }
+    override suspend fun setGrayForceEnable(isEnable: Boolean) {}
 
     override fun grayForceEnabledFlow(): Flow<Boolean> = flowOf()
 }

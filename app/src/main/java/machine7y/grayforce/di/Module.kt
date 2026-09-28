@@ -15,11 +15,9 @@ abstract class Module {
 
     @Binds
     abstract fun bindDeviceSecureSettingsRepository(
-        deviceSettingsRepositoryImpl: DeviceSettingsRepositoryImpl
+        deviceSettingsRepository: DeviceSettingsRepositoryImpl
     ): DeviceSettingsRepository
 
     @Binds
-    abstract fun bindSettingsRepository(
-        settingsRepositoryImpl: SettingsRepositoryImpl
-    ): SettingsRepository
+    abstract fun bindSettingsRepository(settingsRepository: SettingsRepositoryImpl): SettingsRepository
 }

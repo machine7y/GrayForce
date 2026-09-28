@@ -81,6 +81,6 @@ private fun setupAlarm(context: Context, delayInMillis: Int) {
     try {
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pendingIntent)
     } catch (_: SecurityException) {
-        // no op
+        // no operation
     }
 }

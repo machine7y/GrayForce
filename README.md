@@ -55,14 +55,6 @@ System display color adjustment
  └── Monochromacy OFF
 ```
 
-## Permission
-
-Add the following permission to `AndroidManifest.xml`:
-
-```xml
-<uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
-```
-
 ## Installation
 
 Build and install the APK normally:
@@ -72,8 +64,6 @@ adb install app-debug.apk
 ```
 
 Or install the APK from Android Studio.
-
-Find the package name in `applicationId` inside `app/build.gradle.kts`.
 
 ## Granting `WRITE_SECURE_SETTINGS`
 
@@ -88,7 +78,7 @@ adb devices
 Then grant the permission:
 
 ```bash
-adb shell pm grant <package> android.permission.WRITE_SECURE_SETTINGS
+adb shell pm grant machine7y.grayforce android.permission.WRITE_SECURE_SETTINGS
 ```
 
 If the command completes without an error, the permission has been granted.
@@ -98,7 +88,7 @@ If the command completes without an error, the permission has been granted.
 You can inspect the application package:
 
 ```bash
-adb shell dumpsys package com.example.grayscale
+adb shell dumpsys package machine7y.grayforce
 ```
 
 Look for:
@@ -118,7 +108,7 @@ A normal application will not receive the permission automatically.
 The permission must be granted using ADB:
 
 ```bash
-adb shell pm grant <package-name> android.permission.WRITE_SECURE_SETTINGS
+adb shell pm grant machine7y.grayforce android.permission.WRITE_SECURE_SETTINGS
 ```
 
 This is a one-time setup step for the installed application.

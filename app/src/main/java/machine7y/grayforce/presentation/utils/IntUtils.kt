@@ -5,16 +5,16 @@ import machine7y.grayforce.R
 
 private const val SECOND_IN_HOUR = 3600
 private const val SECOND_IN_MINUTE = 60
-private const val MIDDLE = 300
+private const val THRESHOLD = 300
 
-fun Int.scaleValue(): Int = if (this > MIDDLE) {
-    MIDDLE + (this - MIDDLE) * 60f
+fun Int.scaleValue(): Int = if (this > THRESHOLD) {
+    THRESHOLD + (this - THRESHOLD) * 60f
 } else {
     this
 }.toInt()
 
-fun Int.unscaleValue(): Int = if (this > MIDDLE) {
-    MIDDLE + (this - MIDDLE) / 60f
+fun Int.unscaleValue(): Int = if (this > THRESHOLD) {
+    THRESHOLD + (this - THRESHOLD) / 60f
 } else {
     this
 }.toInt()
